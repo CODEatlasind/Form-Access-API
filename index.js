@@ -91,7 +91,10 @@ app.get("/api/forms/:id", async (req, res) => {
   }
 });
 app.get("/", async (req, res) => {
-  res.send("Hello World // Welcome to Form Access API");
+  res.json({
+    message: "Hello World ",
+    description: "Welcome to Form Access API // Made for DOTForm",
+  });
 });
 
 const PORT = process.env.PORT || 5000;

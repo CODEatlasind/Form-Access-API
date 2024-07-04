@@ -18,44 +18,43 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 const Schema = mongoose.Schema;
-const typoSchema = new Schema(
-  {
-    label: { type: String, required: true },
-    smallDescription: { type: String, default: "" },
-    Label: { type: String, default: "" },
-  },
-  { _id: false }
-);
+// const typoSchema = new Schema(
+//   {
+//     label: { type: String, required: true },
+//     smallDescription: { type: String, default: "" },
+//     Label: { type: String, default: "" },
+//   },
+//   { _id: false }
+// );
 
-const attrSchema = new Schema(
-  {
-    required: { type: Boolean, default: false },
-    minLength: { type: String, default: "" },
-    maxLength: { type: String, default: "" },
-    date: { type: String, default: "" },
-  },
-  { _id: false }
-);
+// const attrSchema = new Schema(
+//   {
+//     required: { type: Boolean, default: false },
+//     minLength: { type: String, default: "" },
+//     maxLength: { type: String, default: "" },
+//     date: { type: String, default: "" },
+//   },
+//   { _id: false }
+// );
 
-const formElementSchema = new Schema(
-  {
-    id: { type: Number, required: true },
-    type: { type: String, enum: ["heading", "email", "date"], required: true },
-    attr: { type: attrSchema, required: true },
-    typos: { type: typoSchema, required: true },
-  }
-  //   { _id: false }
-);
+// const formElementSchema = new Schema(
+//   {
+//     id: { type: Number, required: true },
+//     type: { type: String, enum: ["heading", "email", "date"], required: true },
+//     attr: { type: attrSchema, required: true },
+//     typos: { type: typoSchema, required: true },
+//   }
+//   //   { _id: false }
+// );
 
-// const formSchema = new Schema({
-//   elements: [formElementSchema],
-// });
 const formSchema = new mongoose.Schema({
   heading: String,
   fields: Object,
 });
 
-const Form = mongoose.model("Form", formSchema);
+const Form = mongoose.model("Form", formSchema, {
+  collection: "FormConfigurations",
+});
 
 app.post("/api/forms", async (req, res) => {
   console.log("DB access request---");

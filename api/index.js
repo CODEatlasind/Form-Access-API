@@ -18,43 +18,13 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 const Schema = mongoose.Schema;
-// const typoSchema = new Schema(
-//   {
-//     label: { type: String, required: true },
-//     smallDescription: { type: String, default: "" },
-//     Label: { type: String, default: "" },
-//   },
-//   { _id: false }
-// );
 
-// const attrSchema = new Schema(
-//   {
-//     required: { type: Boolean, default: false },
-//     minLength: { type: String, default: "" },
-//     maxLength: { type: String, default: "" },
-//     date: { type: String, default: "" },
-//   },
-//   { _id: false }
-// );
-
-// const formElementSchema = new Schema(
-//   {
-//     id: { type: Number, required: true },
-//     type: { type: String, enum: ["heading", "email", "date"], required: true },
-//     attr: { type: attrSchema, required: true },
-//     typos: { type: typoSchema, required: true },
-//   }
-//   //   { _id: false }
-// );
-
-const formSchema = new mongoose.Schema({
+const formSchema = new Schema({
   heading: String,
   fields: Object,
 });
 
-const Form = mongoose.model("Form", formSchema, {
-  collection: "FormConfigurations",
-});
+const Form = mongoose.model("Form", formSchema);
 
 app.post("/api/forms", async (req, res) => {
   console.log("DB access request---");
@@ -96,6 +66,7 @@ app.get("/", async (req, res) => {
   });
 });
 
+// http://localhost:${PORT}/
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running!!!`);

@@ -2,13 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
+const multer = require("multer");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 require("dotenv").config();
 const uri = process.env.MONGO_URI;
-
+const sender = process.env.USER;
+const senderAuth = process.env.AUTH;
 mongoose
   .connect(uri)
   .then(() => {
@@ -25,6 +28,51 @@ const formSchema = new Schema({
 });
 
 const Form = mongoose.model("Form", formSchema);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Create a transporter object
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: { user: sender, pass: senderAuth },
+});
+
+app.post("/api/send-email", upload.single("file"), (req, res) => {
+  console.log("Email Postage Initiated!!");
+  const { name, email } = req.body;
+  const file = req.file;
+  let recipient = email;
+  if (!file) {
+    return res.status(400).send({ message: "No file uploaded" });
+  }
+  const mailOptions = {
+    from: sender,
+    to: recipient,
+    subject: "Form Submission Successful",
+    text: `Hello ${name}, please find the attached PDF.`,
+    attachments: [
+      {
+        filename: `${name}_Submission.pdf`,
+        content: file.buffer,
+        contentType: file.mimetype,
+      },
+    ],
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send(error.toString());
+    }
+    res
+      .status(200)
+      .json({ message: "Email sent successfully: " + info.response });
+    console.log("Email Sent Successfully To", recipient);
+  });
+});
 
 app.post("/api/forms", async (req, res) => {
   console.log("DB access request---");
@@ -59,6 +107,7 @@ app.get("/api/forms/:id", async (req, res) => {
       .send({ message: "Error fetching form configuration", status: error });
   }
 });
+
 app.get("/", async (req, res) => {
   res.json({
     message: "Hello World ",

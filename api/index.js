@@ -7,7 +7,14 @@ const multer = require("multer");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+const allowedOrigins = ["https://dotform-cosmic365.vercel.app"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+  })
+);
 require("dotenv").config();
 const uri = process.env.MONGO_URI;
 const sender = process.env.USER;

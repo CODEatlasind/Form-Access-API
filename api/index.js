@@ -7,8 +7,7 @@ const multer = require("multer");
 
 const app = express();
 app.use(bodyParser.json());
-// const allowedOrigins = ["https://dotform-cosmic365.vercel.app"];
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["https://dotform-cosmic365.vercel.app"];
 
 app.use(
   cors({

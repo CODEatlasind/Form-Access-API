@@ -7,7 +7,8 @@ const multer = require("multer");
 
 const app = express();
 app.use(bodyParser.json());
-const allowedOrigins = ["https://dotform-cosmic365.vercel.app"];
+// const allowedOrigins = ["https://dotform-cosmic365.vercel.app"];
+const allowedOrigins = ["http://localhost:5173 "];
 
 app.use(
   cors({
@@ -49,7 +50,6 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/api/send-email", upload.single("file"), (req, res) => {
-  console.log("Email Postage Initiated!!");
   const { name, email } = req.body;
   const file = req.file;
   let recipient = email;
@@ -70,6 +70,7 @@ app.post("/api/send-email", upload.single("file"), (req, res) => {
     ],
   };
 
+  console.log("Email Postage Initiated!!");
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return res.status(500).send(error.toString());
